@@ -16,8 +16,8 @@
 			<url>https://jitpack.io</url>
 		</repository>
 		<repository>
-			<id>matsim-eth</id>
-			<url>https://dl.bintray.com/eqasim/eqasim</url>
+    			<id>eqasim</id>
+    			<url>https://packagecloud.io/eth-ivt/eqasim/maven2</url>
 		</repository>
 	</repositories>
 
