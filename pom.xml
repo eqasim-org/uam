@@ -12,8 +12,8 @@
 	</properties>
 	<repositories>
 		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
+			<id>eth-ivt-uam</id>
+			<url>https://packagecloud.io/eth-ivt/uam/maven2</url>
 		</repository>
 		<repository>
     			<id>eqasim</id>
@@ -36,9 +36,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.BauhausLuftfahrt</groupId>
-			<artifactId>MATSim-UAM</artifactId>
-			<version>master-SNAPSHOT</version>
+			<groupId>net.bhl.matsim</groupId>
+			<artifactId>matsim-uam</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 	</dependencies>
 
