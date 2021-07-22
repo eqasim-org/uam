@@ -3,9 +3,11 @@ package org.eqasim.sao_paulo.run;
 import java.util.Random;
 
 import org.eqasim.core.components.config.EqasimConfigGroup;
+import org.eqasim.core.components.transit.EqasimTransitQSimModule;
 import org.eqasim.core.simulation.EqasimConfigurator;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
 import org.eqasim.sao_paulo.UAMEqasimModule;
+import org.eqasim.sao_paulo.UAMEqasimSpeedModule;
 import org.eqasim.sao_paulo.UAMModeChoiceModule;
 import org.eqasim.sao_paulo.mode_choice.SaoPauloModeChoiceModule;
 import org.matsim.api.core.v01.Scenario;
@@ -22,7 +24,9 @@ import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
 import org.matsim.core.config.groups.QSimConfigGroup.StarttimeInterpretation;
+import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
+import org.matsim.core.mobsim.qsim.AbstractQSimModule;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.router.TripStructureUtils.Trip;
 import org.matsim.core.scenario.ScenarioUtils;
@@ -103,7 +107,22 @@ public class RunSimulation {
 		dmcConfig.getTripConstraints().add("UAMConstraint");
 		controler = new Controler(scenario);
 
-		EqasimConfigurator.configureController(controler);
+		// this replaces configureController(controler); from EqasimConfigurator
+		// as now we need to add another dimension for the speed calculator
+		
+		for (AbstractModule module : EqasimConfigurator.getModules()) {
+			controler.addOverridingModule(module);
+		}
+
+		controler.addOverridingQSimModule(new EqasimTransitQSimModule());
+		controler.addOverridingQSimModule(new UAMEqasimSpeedModule());
+
+		controler.configureQSimComponents(configurator -> {
+			EqasimTransitQSimModule.configure(configurator, controler.getConfig());
+		});
+		
+		
+		//EqasimConfigurator.configureController(controler);
 
 		Random random = new Random(0);
 
@@ -130,7 +149,7 @@ public class RunSimulation {
 		controler.addOverridingModule(new DvrpModule());
 
 		controler.addOverridingModule(new UAMModule());
-		controler.addOverridingModule(new UAMSpeedModule());
+		//controler.addOverridingQSimModule(new UAMSpeedModule());
 
 		controler.configureQSimComponents(configurator -> {
 			UAMQSimModule.activateModes().configure(configurator);
